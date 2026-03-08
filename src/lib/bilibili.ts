@@ -196,7 +196,7 @@ async function fetchBilibiliFeedNoCache() {
     return {
       items: fallbackVideos,
       source: "fallback" as const,
-      lastSyncedLabel: "未配置 RSSHub，当前展示手动精选内容",
+      lastSyncedLabel: "",
     };
   }
 

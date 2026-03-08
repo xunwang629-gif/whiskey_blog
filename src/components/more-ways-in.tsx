@@ -82,7 +82,6 @@ export function MoreWaysIn() {
            你威哥的小巧思
           </p>
         </div>
-        <p className="text-sm text-muted">两个入口，两个独立页面</p>
       </div>
 
       <div className="mt-10 grid gap-8 md:grid-cols-2 md:gap-10">

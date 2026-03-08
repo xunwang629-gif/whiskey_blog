@@ -40,7 +40,9 @@ export default async function Home() {
             Archive
           </h2>
           <div className="flex flex-col items-start gap-1 text-sm sm:items-end">
-            <span className="text-muted">{feed.lastSyncedLabel}</span>
+            {feed.lastSyncedLabel ? (
+              <span className="text-muted">{feed.lastSyncedLabel}</span>
+            ) : null}
             <a
               href={BILIBILI_VIDEO_URL}
               target="_blank"
@@ -72,9 +74,6 @@ export default async function Home() {
             </a>
           ))}
         </div>
-        {feed.source === "fallback" ? (
-          <p className="mt-6 text-sm text-muted">当前展示手动精选内容。</p>
-        ) : null}
       </section>
 
       <MoreWaysIn />

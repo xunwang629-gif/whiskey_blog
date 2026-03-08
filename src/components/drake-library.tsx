@@ -14,11 +14,10 @@ export function DrakeLibrary({ tracks }: DrakeLibraryProps) {
     tracks.find((track) => track.id === activeTrackId) ?? tracks[0] ?? null;
 
   return (
-    <section id="drake-library" className="mx-auto max-w-4xl px-6 py-16">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      </div>
+    <section id="drake-library" className="mx-auto max-w-4xl px-6 pt-8 pb-14 sm:pt-10 sm:pb-16">
+      <p className="text-xs tracking-[0.28em] text-muted uppercase">Drake Library</p>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
         <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
           {activeTrack ? (
             <>
