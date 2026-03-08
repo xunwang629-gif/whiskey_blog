@@ -1,14 +1,19 @@
-export default function Home() {
+import Link from "next/link";
+
+import { BILIBILI_SPACE_URL, BILIBILI_VIDEO_URL, getBilibiliFeed } from "@/lib/bilibili";
+
+export default async function Home() {
+  const feed = await getBilibiliFeed();
+  const latestDrops = feed.items.slice(0, 3);
+  const archiveItems = feed.items.slice(3, 8);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── Navigation ── */}
       <nav className="mx-auto flex max-w-4xl items-center justify-between px-6 py-8">
-        <a
-          href="/"
-          className="font-serif text-xl font-semibold tracking-tight"
-        >
+        <Link href="/" className="font-serif text-xl font-semibold tracking-tight">
           HiWhiskey
-        </a>
+        </Link>
         <div className="flex items-center gap-8 text-[15px] text-muted">
           <a
             href="#drops"
@@ -23,7 +28,7 @@ export default function Home() {
             About
           </a>
           <a
-            href="https://space.bilibili.com/7858870"
+            href={BILIBILI_SPACE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-border px-4 py-1.5 text-sm transition-all duration-200 hover:border-foreground hover:text-foreground"
@@ -61,107 +66,63 @@ export default function Home() {
           <h2 className="font-serif text-2xl font-medium tracking-tight">
             Latest Drops
           </h2>
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-muted transition-colors duration-200 hover:text-accent"
-          >
-            查看全部 &rarr;
-          </a>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-muted">{feed.lastSyncedLabel}</span>
+            <a
+              href={BILIBILI_VIDEO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted transition-colors duration-200 hover:text-accent"
+            >
+              查看全部 &rarr;
+            </a>
+          </div>
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {/* Card 1 — Drake Top 10 (biggest hit) */}
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block"
-          >
-            <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-zinc-800 to-stone-900 p-6 transition-transform duration-300 group-hover:scale-[1.02]">
-              <div className="flex h-full flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
-                    92w 播放
-                  </span>
-                  <span className="text-xs text-white/40">18:56</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white/50">Drake</p>
-                  <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
-                    Drake&apos;s Top 10 Songs
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/50">
-                    全网最全 Drake 十佳歌曲歌词深度解析
-                  </p>
-                </div>
-              </div>
-            </div>
-          </a>
-
-          {/* Card 2 — Kanye */}
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block"
-          >
-            <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br from-amber-950 via-orange-900 to-yellow-950 p-6 transition-transform duration-300 group-hover:scale-[1.02]">
-              <div className="flex h-full flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
-                    3.6w 播放
-                  </span>
-                  <span className="text-xs text-white/40">4:32</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white/50">
-                    Kanye West
-                  </p>
-                  <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
-                    Ghost Town
-                    <br />
-                    歌词解析
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/50">
-                    Ye 最被低估的一首歌，孤独、自由与救赎
-                  </p>
+          {latestDrops.map((video) => (
+            <a
+              key={`${video.title}-${video.publishedAt}`}
+              href={video.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <div
+                className={`aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br ${video.accentClass} p-6 transition-transform duration-300 group-hover:scale-[1.02]`}
+              >
+                <div className="flex h-full flex-col justify-between">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
+                      {video.badge}
+                    </span>
+                    <span className="text-xs text-white/50">
+                      {video.publishedLabel}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/50">
+                      {video.subtitle}
+                    </p>
+                    <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
+                      {video.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/50">
+                      {video.summary}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
-
-          {/* Card 3 — Drake */}
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block"
-          >
-            <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-950 via-indigo-900 to-purple-900 p-6 transition-transform duration-300 group-hover:scale-[1.02]">
-              <div className="flex h-full flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
-                    7.8w 播放
-                  </span>
-                  <span className="text-xs text-white/40">3:15</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white/50">Drake</p>
-                  <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
-                    What Did I Miss?
-                    <br />
-                    歌词解析
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/50">
-                    Drake 的反击，每一句都有所指
-                  </p>
-                </div>
-              </div>
-            </div>
-          </a>
+            </a>
+          ))}
         </div>
+
+        {feed.source === "fallback" ? (
+          <p className="mt-6 text-sm text-muted">
+            当前还是手动精选内容。等你在 Vercel 配好 `BILIBILI_RSS_URL` 和
+            `CRON_SECRET` 后，这里会改成每天自动同步。
+          </p>
+        ) : null}
       </section>
 
       {/* ── More Episodes (list style) ── */}
@@ -170,62 +131,25 @@ export default function Home() {
           Archive
         </h2>
         <div className="mt-8 flex flex-col divide-y divide-border">
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between py-5"
-          >
-            <div>
-              <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
-                Family Matters - Drake 歌词解析
-              </h3>
-              <p className="mt-1 text-sm text-muted">Drake · 歌词解析</p>
-            </div>
-            <span className="shrink-0 text-sm text-muted">1,140 播放</span>
-          </a>
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between py-5"
-          >
-            <div>
-              <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
-                5am in Toronto - Drake 歌词解析
-              </h3>
-              <p className="mt-1 text-sm text-muted">Drake · 歌词解析</p>
-            </div>
-            <span className="shrink-0 text-sm text-muted">748 播放</span>
-          </a>
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between py-5"
-          >
-            <div>
-              <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
-                Emotionless - Drake 歌词解析
-              </h3>
-              <p className="mt-1 text-sm text-muted">Drake · 歌词解析</p>
-            </div>
-            <span className="shrink-0 text-sm text-muted">1,257 播放</span>
-          </a>
-          <a
-            href="https://space.bilibili.com/7858870/video"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between py-5"
-          >
-            <div>
-              <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
-                Fireworks - Drake 歌词解析
-              </h3>
-              <p className="mt-1 text-sm text-muted">Drake · 歌词解析</p>
-            </div>
-            <span className="shrink-0 text-sm text-muted">1,214 播放</span>
-          </a>
+          {archiveItems.map((video) => (
+            <a
+              key={`${video.title}-${video.publishedLabel}`}
+              href={video.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between gap-6 py-5"
+            >
+              <div>
+                <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
+                  {video.title}
+                </h3>
+                <p className="mt-1 text-sm text-muted">{video.subtitle}</p>
+              </div>
+              <span className="shrink-0 text-sm text-muted">
+                {video.publishedLabel}
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
@@ -234,8 +158,8 @@ export default function Home() {
         id="about"
         className="mx-auto max-w-4xl border-t border-border px-6 py-16"
       >
-        <div className="grid gap-10 sm:grid-cols-[1fr_1.2fr]">
-          <div>
+        <div className="grid gap-12 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] sm:items-start">
+          <div className="max-w-md">
             <h2 className="font-serif text-2xl font-medium tracking-tight">
               About
             </h2>
@@ -249,8 +173,8 @@ export default function Home() {
               清淡饮食加早睡
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <div className="rounded-xl border border-border bg-card p-5">
+          <div className="sm:justify-self-end">
+            <div className="max-w-lg rounded-xl border border-border bg-card p-5">
               <p className="text-xs tracking-widest text-muted uppercase">
                 常驻解析
               </p>
@@ -272,23 +196,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5">
-              <p className="text-xs tracking-widest text-muted uppercase">
-                Tech Stack
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {["Java", "Spring Boot", "Next.js", "TypeScript"].map(
-                  (tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-accent/10 px-3 py-1 text-sm text-accent"
-                    >
-                      {tag}
-                    </span>
-                  ),
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -306,7 +213,7 @@ export default function Home() {
         </p>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
           <a
-            href="https://space.bilibili.com/7858870"
+            href={BILIBILI_SPACE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="group rounded-xl border border-border bg-card px-5 py-4 transition-all duration-200 hover:bg-card-hover hover:shadow-sm"

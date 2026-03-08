@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## HiWhiskey
 
-## Getting Started
+个人网站，部署在 Vercel，首页会展示 B 站最新内容。
 
-First, run the development server:
+## 本地开发
+
+先安装依赖并启动开发环境：
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+浏览器打开 [http://localhost:3000](http://localhost:3000)。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 自动同步 B 站
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+当前项目已经预留了 `Vercel Hobby` 的每日同步结构：
 
-## Learn More
+- 首页会尝试读取 `BILIBILI_RSS_URL`
+- 如果 RSS 可用，首页 `Latest Drops / Archive` 会自动显示最新视频
+- 如果 RSS 未配置或抓取失败，页面会自动回退到手动精选内容
+- `vercel.json` 已配置每日 cron，触发路径为 `/api/cron/bilibili`
 
-To learn more about Next.js, take a look at the following resources:
+### 需要配置的环境变量
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+参考 [.env.example](./.env.example)：
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+BILIBILI_RSS_URL=https://your-rsshub-domain.example.com/bilibili/user/video/7858870
+CRON_SECRET=replace-with-a-random-string
+```
 
-## Deploy on Vercel
+说明：
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `BILIBILI_RSS_URL`：你自己部署的 RSSHub 路由
+- `CRON_SECRET`：Vercel Cron 调用 `/api/cron/bilibili` 时使用的校验密钥
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Vercel Hobby 限制
+
+- 只能每天同步一次
+- 触发时间是“该小时内”，不是精确到分钟
+
+## 部署
+
+建议直接连接 GitHub 仓库部署到 Vercel。
+
+每次推送到 `main` 后，Vercel 会自动重新部署。
