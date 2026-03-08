@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { CommunityNav } from "@/components/community-nav";
+import { SiteNav } from "@/components/site-nav";
 import { CommunityThreadList } from "@/components/community-thread-list";
 import { CommunityThreadPanel } from "@/components/community-thread-panel";
 import { getCommunityThread, listCommunityPosts } from "@/lib/notion-community";
@@ -26,7 +26,7 @@ export default async function CommunityThreadPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <CommunityNav />
+      <SiteNav />
 
       <section className="community-detail-page-shell mx-auto max-w-[1600px] px-3 py-3 sm:px-4 sm:py-4 md:px-6">
         <div className="community-split" data-panel-open="true">

@@ -1,5 +1,5 @@
 import { CommunityLobbyShell } from "@/components/community-lobby-shell";
-import { CommunityNav } from "@/components/community-nav";
+import { SiteNav } from "@/components/site-nav";
 import { listCommunityPosts } from "@/lib/notion-community";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default async function CommunityPage({ searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <CommunityNav />
+      <SiteNav />
 
       <section className="mx-auto max-w-[1600px] px-3 py-3 sm:px-4 sm:py-4 md:px-6">
         <CommunityLobbyShell
