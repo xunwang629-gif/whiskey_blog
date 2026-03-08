@@ -10,22 +10,22 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── Navigation ── */}
-      <nav className="mx-auto flex max-w-4xl items-center justify-between px-6 py-8">
+      <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-6 sm:flex-nowrap sm:py-8">
         <Link href="/" className="font-serif text-xl font-semibold tracking-tight">
           HiWhiskey
         </Link>
-        <div className="flex items-center gap-8 text-[15px] text-muted">
+        <div className="flex w-full items-center justify-between gap-4 text-[14px] text-muted sm:w-auto sm:justify-end sm:gap-8 sm:text-[15px]">
           <a
             href="#drops"
             className="transition-colors duration-200 hover:text-foreground"
           >
-            Drops
+            我的发布
           </a>
           <a
             href="#about"
             className="transition-colors duration-200 hover:text-foreground"
           >
-            About
+            关于
           </a>
           <a
             href={BILIBILI_SPACE_URL}
@@ -39,18 +39,18 @@ export default async function Home() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="mx-auto max-w-4xl px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
-        <p className="animate-in stagger-1 text-sm tracking-[0.3em] text-muted uppercase">
+      <section className="mx-auto max-w-4xl px-6 pt-12 pb-16 sm:pt-24 sm:pb-28">
+        <p className="animate-in stagger-1 text-[11px] tracking-[0.22em] text-muted uppercase sm:text-sm sm:tracking-[0.3em]">
           Hip-Hop 歌词解析&ensp;·&ensp;Culture&ensp;·&ensp;Code
         </p>
 
-        <h1 className="animate-in stagger-2 mt-6 font-serif text-[clamp(2.8rem,7vw,5rem)] font-medium leading-[1.08] tracking-tight">
+        <h1 className="animate-in stagger-2 mt-5 font-serif text-[clamp(2.4rem,10vw,5rem)] font-medium leading-[1.04] tracking-tight sm:mt-6 sm:leading-[1.08]">
           All for love,
           <br />
           All for the culture.
         </h1>
 
-        <p className="animate-in stagger-3 mt-8 max-w-xl text-[17px] leading-relaxed text-muted">
+        <p className="animate-in stagger-3 mt-6 max-w-xl text-[15px] leading-relaxed text-muted sm:mt-8 sm:text-[17px]">
           我是 HiWhiskey，专注欧美 Hip-Hop
           歌词深度解析，偶尔会归纳一些喜欢的泄曲～
           全部为了爱。
@@ -62,11 +62,11 @@ export default async function Home() {
 
       {/* ── Latest Drops (Analysis) ── */}
       <section id="drops" className="mx-auto max-w-4xl px-6 py-16">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="font-serif text-2xl font-medium tracking-tight">
             Latest Drops
           </h2>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex flex-col items-start gap-1 text-sm sm:items-end">
             <span className="text-muted">{feed.lastSyncedLabel}</span>
             <a
               href={BILIBILI_VIDEO_URL}
@@ -137,9 +137,9 @@ export default async function Home() {
               href={video.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-between gap-6 py-5"
+              className="group flex flex-col items-start gap-2 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
             >
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
                   {video.title}
                 </h3>
@@ -258,7 +258,7 @@ export default async function Home() {
 
       {/* ── Footer ── */}
       <footer className="mx-auto max-w-4xl border-t border-border px-6 py-8">
-        <div className="flex items-center justify-between text-sm text-muted">
+        <div className="flex flex-col gap-2 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 HiWhiskey</p>
           <p className="font-serif italic">All for the culture.</p>
         </div>

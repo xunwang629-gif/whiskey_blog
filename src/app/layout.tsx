@@ -15,7 +15,7 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Whiskey Blog",
+  title: "哈喽威士忌",
   description: "Personal site and blog by a Java engineer building on the web.",
 };
 
