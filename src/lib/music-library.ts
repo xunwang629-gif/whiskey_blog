@@ -14,7 +14,7 @@ export const drakeTracks: MusicTrack[] = [
     id: "drake-1",
     title: "Marvins Room",
     subtitle: "Drake",
-    description: "示例条目：把 src 改成你自己的音频文件路径。",
+    description: "",
     src: "/music/marvins-room.mp3",
   },
   {

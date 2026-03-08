@@ -3,6 +3,9 @@ import { SiteNav } from "@/components/site-nav";
 import { WechatCard } from "@/components/wechat-card";
 import { BILIBILI_SPACE_URL, BILIBILI_VIDEO_URL, getBilibiliFeed } from "@/lib/bilibili";
 
+const DOUYIN_HOME_URL = "https://v.douyin.com/as-jtaIJomE/";
+const GITHUB_HOME_URL = "https://github.com/xunwang629-gif/whiskey_blog";
+
 export default async function Home() {
   const feed = await getBilibiliFeed();
   const archiveItems = feed.items.slice(3, 8);
@@ -101,18 +104,28 @@ export default async function Home() {
             </p>
             <p className="mt-1 text-sm text-muted">歌词解析视频</p>
           </a>
-          <div className="card-lift cursor-default rounded-xl border border-border bg-card px-5 py-4">
-            <p className="font-medium tracking-tight text-muted/60">
+          <a
+            href={DOUYIN_HOME_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card-lift group rounded-xl border border-border bg-card px-5 py-4"
+          >
+            <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
               抖音
             </p>
-            <p className="mt-1 text-sm text-muted/50">即将上线</p>
-          </div>
-          <div className="card-lift cursor-default rounded-xl border border-border bg-card px-5 py-4">
-            <p className="font-medium tracking-tight text-muted/60">
+            <p className="mt-1 text-sm text-muted">打开抖音主页</p>
+          </a>
+          <a
+            href={GITHUB_HOME_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card-lift group rounded-xl border border-border bg-card px-5 py-4"
+          >
+            <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
               GitHub
             </p>
-            <p className="mt-1 text-sm text-muted/50">即将上线</p>
-          </div>
+            <p className="mt-1 text-sm text-muted">查看项目仓库</p>
+          </a>
           <WechatCard />
         </div>
       </section>
