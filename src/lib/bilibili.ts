@@ -55,8 +55,8 @@ const fallbackVideos: BilibiliVideo[] = [
   {
     title: "Family Matters - Drake 歌词解析",
     url: BILIBILI_VIDEO_URL,
-    summary: "Drake · 歌词解析",
-    subtitle: "Drake · 歌词解析",
+    summary: "逐句拆解 Drake 如何用事实碾压 Kendrick",
+    subtitle: "Drake",
     badge: "手动精选",
     publishedAt: "2026-02-25T00:00:00.000Z",
     publishedLabel: "2026-02-25",
@@ -65,8 +65,8 @@ const fallbackVideos: BilibiliVideo[] = [
   {
     title: "5am in Toronto - Drake 歌词解析",
     url: BILIBILI_VIDEO_URL,
-    summary: "Drake · 歌词解析",
-    subtitle: "Drake · 歌词解析",
+    summary: "Toronto 时代的野心与孤独",
+    subtitle: "Drake",
     badge: "手动精选",
     publishedAt: "2026-02-21T00:00:00.000Z",
     publishedLabel: "2026-02-21",
@@ -75,8 +75,8 @@ const fallbackVideos: BilibiliVideo[] = [
   {
     title: "Emotionless - Drake 歌词解析",
     url: BILIBILI_VIDEO_URL,
-    summary: "Drake · 歌词解析",
-    subtitle: "Drake · 歌词解析",
+    summary: "用最克制的旋律说最沉重的话",
+    subtitle: "Drake",
     badge: "手动精选",
     publishedAt: "2026-02-17T00:00:00.000Z",
     publishedLabel: "2026-02-17",
@@ -85,8 +85,8 @@ const fallbackVideos: BilibiliVideo[] = [
   {
     title: "Fireworks - Drake 歌词解析",
     url: BILIBILI_VIDEO_URL,
-    summary: "Drake · 歌词解析",
-    subtitle: "Drake · 歌词解析",
+    summary: "Take Care 时代最被低估的一首",
+    subtitle: "Drake",
     badge: "手动精选",
     publishedAt: "2026-02-13T00:00:00.000Z",
     publishedLabel: "2026-02-13",

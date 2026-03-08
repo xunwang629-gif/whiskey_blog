@@ -1,45 +1,18 @@
-import Link from "next/link";
-
+import { MoreWaysIn } from "@/components/more-ways-in";
+import { SiteNav } from "@/components/site-nav";
+import { WechatCard } from "@/components/wechat-card";
 import { BILIBILI_SPACE_URL, BILIBILI_VIDEO_URL, getBilibiliFeed } from "@/lib/bilibili";
 
 export default async function Home() {
   const feed = await getBilibiliFeed();
-  const latestDrops = feed.items.slice(0, 3);
   const archiveItems = feed.items.slice(3, 8);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {/* ── Navigation ── */}
-      <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-6 sm:flex-nowrap sm:py-8">
-        <Link href="/" className="font-serif text-xl font-semibold tracking-tight">
-          HiWhiskey
-        </Link>
-        <div className="flex w-full items-center justify-between gap-4 text-[14px] text-muted sm:w-auto sm:justify-end sm:gap-8 sm:text-[15px]">
-          <a
-            href="#drops"
-            className="transition-colors duration-200 hover:text-foreground"
-          >
-            我的发布
-          </a>
-          <a
-            href="#about"
-            className="transition-colors duration-200 hover:text-foreground"
-          >
-            关于
-          </a>
-          <a
-            href={BILIBILI_SPACE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-border px-4 py-1.5 text-sm transition-all duration-200 hover:border-foreground hover:text-foreground"
-          >
-            B 站
-          </a>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* ── Hero ── */}
-      <section className="mx-auto max-w-4xl px-6 pt-12 pb-16 sm:pt-24 sm:pb-28">
+      <section className="mx-auto flex min-h-[calc(100svh-73px)] max-w-4xl flex-col justify-center px-6 py-12 sm:min-h-[calc(100svh-85px)] sm:py-16">
         <p className="animate-in stagger-1 text-[11px] tracking-[0.22em] text-muted uppercase sm:text-sm sm:tracking-[0.3em]">
           Hip-Hop 歌词解析&ensp;·&ensp;Culture&ensp;·&ensp;Code
         </p>
@@ -51,20 +24,20 @@ export default async function Home() {
         </h1>
 
         <p className="animate-in stagger-3 mt-6 max-w-xl text-[15px] leading-relaxed text-muted sm:mt-8 sm:text-[17px]">
-          我是 HiWhiskey，专注欧美 Hip-Hop
+          HiWhiskey，
           歌词深度解析，偶尔会归纳一些喜欢的泄曲～
           全部为了爱。
         </p>
-
-        {/* accent bar */}
-        <div className="animate-in stagger-4 mt-10 h-px w-16 bg-accent/40" />
       </section>
 
-      {/* ── Latest Drops (Analysis) ── */}
-      <section id="drops" className="mx-auto max-w-4xl px-6 py-16">
+      {/* ── Archive ── */}
+      <section
+        id="drops"
+        className="mx-auto max-w-4xl border-t border-border px-6 py-16 scroll-mt-20"
+      >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="font-serif text-2xl font-medium tracking-tight">
-            Latest Drops
+            Archive
           </h2>
           <div className="flex flex-col items-start gap-1 text-sm sm:items-end">
             <span className="text-muted">{feed.lastSyncedLabel}</span>
@@ -78,66 +51,14 @@ export default async function Home() {
             </a>
           </div>
         </div>
-
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {latestDrops.map((video) => (
-            <a
-              key={`${video.title}-${video.publishedAt}`}
-              href={video.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block"
-            >
-              <div
-                className={`aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br ${video.accentClass} p-6 transition-transform duration-300 group-hover:scale-[1.02]`}
-              >
-                <div className="flex h-full flex-col justify-between">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm">
-                      {video.badge}
-                    </span>
-                    <span className="text-xs text-white/50">
-                      {video.publishedLabel}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white/50">
-                      {video.subtitle}
-                    </p>
-                    <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
-                      {video.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/50">
-                      {video.summary}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        {feed.source === "fallback" ? (
-          <p className="mt-6 text-sm text-muted">
-            当前还是手动精选内容。等你在 Vercel 配好 `BILIBILI_RSS_URL` 和
-            `CRON_SECRET` 后，这里会改成每天自动同步。
-          </p>
-        ) : null}
-      </section>
-
-      {/* ── More Episodes (list style) ── */}
-      <section className="mx-auto max-w-4xl px-6 py-12">
-        <h2 className="font-serif text-2xl font-medium tracking-tight">
-          Archive
-        </h2>
-        <div className="mt-8 flex flex-col divide-y divide-border">
+        <div className="mt-8 flex flex-col">
           {archiveItems.map((video) => (
             <a
               key={`${video.title}-${video.publishedLabel}`}
               href={video.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col items-start gap-2 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+              className="group -mx-3 flex flex-col items-start gap-2 rounded-lg px-3 py-5 transition-colors duration-200 hover:bg-card sm:flex-row sm:items-center sm:justify-between sm:gap-6"
             >
               <div className="min-w-0">
                 <h3 className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
@@ -151,59 +72,17 @@ export default async function Home() {
             </a>
           ))}
         </div>
+        {feed.source === "fallback" ? (
+          <p className="mt-6 text-sm text-muted">当前展示手动精选内容。</p>
+        ) : null}
       </section>
 
-      {/* ── About ── */}
-      <section
-        id="about"
-        className="mx-auto max-w-4xl border-t border-border px-6 py-16"
-      >
-        <div className="grid gap-12 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] sm:items-start">
-          <div className="max-w-md">
-            <h2 className="font-serif text-2xl font-medium tracking-tight">
-              About
-            </h2>
-            <p className="mt-6 text-[15px] leading-relaxed text-muted">
-              HiWhiskey，
-            </p>
-            <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              专注 Drake、Kanye West 等欧美说唱歌手的歌词深度解析。
-            </p>
-            <p className="mt-4 text-[15px] leading-relaxed text-muted">
-              清淡饮食加早睡
-            </p>
-          </div>
-          <div className="sm:justify-self-end">
-            <div className="max-w-lg rounded-xl border border-border bg-card p-5">
-              <p className="text-xs tracking-widest text-muted uppercase">
-                常驻解析
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {[
-                  "Drake",
-                  "Kanye West",
-                  "歌词翻译",
-                  "深度解析",
-                  "文化背景",
-                  "欧美说唱",
-                ].map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-border px-3 py-1 text-sm text-muted"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <MoreWaysIn />
 
       {/* ── Connect ── */}
       <section
         id="connect"
-        className="mx-auto max-w-4xl border-t border-border px-6 py-16"
+        className="mx-auto max-w-4xl border-t border-border px-6 py-16 scroll-mt-20"
       >
         <h2 className="font-serif text-2xl font-medium tracking-tight">
           Connect
@@ -216,50 +95,32 @@ export default async function Home() {
             href={BILIBILI_SPACE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-xl border border-border bg-card px-5 py-4 transition-all duration-200 hover:bg-card-hover hover:shadow-sm"
+            className="card-lift group rounded-xl border border-border bg-card px-5 py-4"
           >
             <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
               Bilibili
             </p>
             <p className="mt-1 text-sm text-muted">歌词解析视频</p>
           </a>
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group rounded-xl border border-border bg-card px-5 py-4 transition-all duration-200 hover:bg-card-hover hover:shadow-sm"
-          >
-            {/* TODO: 替换为你的抖音公开链接 */}
-            <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
+          <div className="card-lift cursor-default rounded-xl border border-border bg-card px-5 py-4">
+            <p className="font-medium tracking-tight text-muted/60">
               抖音
             </p>
-            <p className="mt-1 text-sm text-muted">短视频版解析</p>
-          </a>
-          <a
-            href="#"
-            className="group rounded-xl border border-border bg-card px-5 py-4 transition-all duration-200 hover:bg-card-hover hover:shadow-sm"
-          >
-            <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
+            <p className="mt-1 text-sm text-muted/50">即将上线</p>
+          </div>
+          <div className="card-lift cursor-default rounded-xl border border-border bg-card px-5 py-4">
+            <p className="font-medium tracking-tight text-muted/60">
               GitHub
             </p>
-            <p className="mt-1 text-sm text-muted">开源项目</p>
-          </a>
-          <a
-            href="#"
-            className="group rounded-xl border border-border bg-card px-5 py-4 transition-all duration-200 hover:bg-card-hover hover:shadow-sm"
-          >
-            <p className="font-medium tracking-tight transition-colors duration-200 group-hover:text-accent">
-              微信群
-            </p>
-            <p className="mt-1 text-sm text-muted">linewitblack</p>
-          </a>
+            <p className="mt-1 text-sm text-muted/50">即将上线</p>
+          </div>
+          <WechatCard />
         </div>
       </section>
-
       {/* ── Footer ── */}
       <footer className="mx-auto max-w-4xl border-t border-border px-6 py-8">
         <div className="flex flex-col gap-2 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; 2026 HiWhiskey</p>
+          <p>&copy; {new Date().getFullYear()} HiWhiskey</p>
           <p className="font-serif italic">All for the culture.</p>
         </div>
       </footer>

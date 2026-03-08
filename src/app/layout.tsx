@@ -15,8 +15,8 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "哈喽威士忌",
-  description: "Personal site and blog by a Java engineer building on the web.",
+  title: "HiWhiskey · 哈喽威士忌",
+  description: "欧美 Hip-Hop 歌词深度解析，Drake、Kanye West 文化解读。All for the culture.",
 };
 
 export default function RootLayout({

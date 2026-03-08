@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f2;
-  --foreground: #1c1917;
-  --accent: #b45309;
-  --muted: #78716c;
-  --border: #e7e5e4;
+  --background: #faf9f5;
+  --foreground: #1f1e1d;
+  --accent: #d97757;
+  --muted: #9a9890;
+  --border: #e8e6dc;
   --card: #ffffff;
-  --card-hover: #fdf9f3;
+  --card-hover: #fdf8f3;
 }
 
 @theme inline {
@@ -80,25 +80,140 @@ a {
 
 /* ── Selection color ── */
 ::selection {
-  background: rgba(180, 83, 9, 0.15);
+  background: rgba(217, 119, 87, 0.18);
 }
 
-/* ── Gradient card shimmer on hover ── */
-@keyframes shimmer {
-  0% {
-    background-position: 0% 50%;
+/* ── Card hover lift ── */
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.community-panel {
+  border: 1px solid rgba(232, 230, 220, 1);
+  border-radius: 28px;
+  background: #fffdf8;
+  box-shadow:
+    0 20px 44px rgba(31, 30, 29, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.community-detail-shell {
+  overflow: hidden;
+  border: 1px solid rgba(232, 230, 220, 1);
+  border-radius: 28px;
+  background: #fffef9;
+  box-shadow:
+    0 24px 60px rgba(31, 30, 29, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(22px);
+}
+
+.community-split {
+  display: grid;
+  gap: 0.75rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 860px) {
+  .community-split {
+    transition: grid-template-columns 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  50% {
-    background-position: 100% 50%;
+
+  .community-split[data-panel-open="true"] {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.35fr);
   }
-  100% {
-    background-position: 0% 50%;
+
+  .community-split[data-panel-open="false"] {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-.group:hover .gradient-card {
-  background-size: 200% 200%;
-  animation: shimmer 3s ease infinite;
+@media (min-width: 1280px) {
+  .community-split[data-panel-open="true"] {
+    grid-template-columns: 420px minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1480px) {
+  .community-split[data-panel-open="true"] {
+    grid-template-columns: 460px minmax(0, 1fr);
+  }
+}
+
+@keyframes communityPanelEnter {
+  from {
+    opacity: 0;
+    transform: translateX(26px) scaleX(0.94) scaleY(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scaleX(1) scaleY(1);
+  }
+}
+
+.community-panel-enter {
+  transform-origin: left center;
+  animation: communityPanelEnter 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform, opacity;
+}
+
+.community-detail-scroll {
+  padding-bottom: 12.5rem;
+}
+
+.community-detail-composer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .community-panel-enter {
+    animation: none;
+  }
+}
+
+@media (min-width: 860px) {
+  .community-detail-page-shell {
+    height: calc(100svh - 81px);
+    overflow: hidden;
+  }
+
+  .community-detail-page-shell .community-split {
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .community-detail-page-shell .community-panel,
+  .community-detail-page-shell .community-detail-shell {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .community-detail-page-shell .community-detail-shell {
+    position: relative;
+  }
+
+  .community-detail-page-shell .community-detail-scroll {
+    padding-bottom: 14.5rem;
+  }
+
+  .community-detail-page-shell .community-detail-composer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 }
 
 @media (max-width: 640px) {
@@ -138,6 +253,19 @@ a {
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  @keyframes communityPanelEnter {
+    from {
+      opacity: 0;
+      transform: translateX(10px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
     }
   }
 }
