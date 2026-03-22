@@ -25,7 +25,7 @@ export function CommunityThreadPanel({ thread }: { thread: CommunityThread }) {
             </Link>
           </div>
 
-          <h1 className="mt-5 max-w-4xl font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl">
+          <h1 className="mt-5 max-w-4xl font-serif text-2xl leading-tight tracking-tight text-foreground sm:text-3xl">
             {thread.title}
           </h1>
 
@@ -35,14 +35,7 @@ export function CommunityThreadPanel({ thread }: { thread: CommunityThread }) {
         </div>
 
         <div className="border-t border-border/90 px-5 py-5 sm:px-7">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs tracking-[0.22em] text-muted uppercase">Replies</p>
-              <h2 className="mt-2 font-serif text-3xl tracking-tight text-foreground">下面接着聊</h2>
-            </div>
-          </div>
-
-          <div className="mt-6 space-y-4">
+          <div className="space-y-4">
             {thread.replies.length ? (
               thread.replies.map((reply, index) => (
                 <article

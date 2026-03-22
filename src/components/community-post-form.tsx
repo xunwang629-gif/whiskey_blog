@@ -26,15 +26,9 @@ export function CommunityPostForm({
     const trimmedTitle = title.trim();
     const trimmedContent = content.trim();
 
-    if (trimmedTitle.length < 4) {
+    if (!trimmedTitle) {
       setSubmitState("error");
-      setFeedback("标题至少写 4 个字。");
-      return;
-    }
-
-    if (trimmedContent.length < 6) {
-      setSubmitState("error");
-      setFeedback("正文至少写 6 个字。");
+      setFeedback("标题不能为空。");
       return;
     }
 

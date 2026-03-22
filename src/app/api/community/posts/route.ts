@@ -13,16 +13,9 @@ export async function POST(request: Request) {
     const title = typeof body.title === "string" ? body.title.trim().slice(0, 80) : "";
     const content = typeof body.content === "string" ? body.content.trim().slice(0, 2000) : "";
 
-    if (title.length < 4) {
+    if (!title) {
       return NextResponse.json(
-        { ok: false, error: "标题至少写 4 个字。" },
-        { status: 400 },
-      );
-    }
-
-    if (content.length < 6) {
-      return NextResponse.json(
-        { ok: false, error: "正文至少写 6 个字。" },
+        { ok: false, error: "标题不能为空。" },
         { status: 400 },
       );
     }
