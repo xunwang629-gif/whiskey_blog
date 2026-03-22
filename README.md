@@ -35,6 +35,9 @@ CRON_SECRET=replace-with-a-random-string
 
 - `BILIBILI_RSS_URL`：你自己部署的 RSSHub 路由
 - `CRON_SECRET`：Vercel Cron 调用 `/api/cron/bilibili` 时使用的校验密钥
+- `NOTION_TOKEN`：你的 Notion integration token
+- `NOTION_DATA_SOURCE_ID`：推荐直接填写社区帖子所在的 data source ID
+- `NOTION_DATABASE_ID`：可选兜底；如果数据库下只有一个 data source，应用会自动识别它
 
 ### Vercel Hobby 限制
 

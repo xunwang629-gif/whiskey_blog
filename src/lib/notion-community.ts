@@ -8,6 +8,17 @@ type NotionSchemaResponse = {
   properties?: Record<string, NotionPropertyDefinition>;
 };
 
+type NotionDatabaseSummary = {
+  id: string;
+  name?: string;
+};
+
+type NotionDatabaseResponse = {
+  id: string;
+  data_sources?: NotionDatabaseSummary[];
+  properties?: Record<string, NotionPropertyDefinition>;
+};
+
 type NotionRichText = {
   plain_text?: string;
 };
@@ -71,6 +82,9 @@ const NOTION_TOKEN = process.env.NOTION_TOKEN;
 const NOTION_DATA_SOURCE_ID = process.env.NOTION_DATA_SOURCE_ID;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
+let resolvedNotionDataSourceIdPromise: Promise<string | null> | null = null;
+let resolvedTitlePropertyNamePromise: Promise<string> | null = null;
+
 const SAMPLE_THREADS: CommunityThread[] = [
   {
     id: "sample-marvins-room",
@@ -129,7 +143,7 @@ function formatDateLabel(value: string) {
 }
 
 function getNotionVersion() {
-  return NOTION_DATA_SOURCE_ID ? "2025-09-03" : "2022-06-28";
+  return "2025-09-03";
 }
 
 function getNotionHeaders() {
@@ -146,22 +160,6 @@ function getSchemaUrl() {
   }
 
   return `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}`;
-}
-
-function getQueryUrl() {
-  if (NOTION_DATA_SOURCE_ID) {
-    return `https://api.notion.com/v1/data_sources/${NOTION_DATA_SOURCE_ID}/query`;
-  }
-
-  return `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`;
-}
-
-function getParentPayload() {
-  if (NOTION_DATA_SOURCE_ID) {
-    return { type: "data_source_id", data_source_id: NOTION_DATA_SOURCE_ID };
-  }
-
-  return { database_id: NOTION_DATABASE_ID };
 }
 
 function hasNotionConfig() {
@@ -184,21 +182,86 @@ async function notionRequest<T>(url: string, init?: RequestInit) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Notion 请求失败。");
+
+    try {
+      const parsed = JSON.parse(errorText) as {
+        message?: string;
+        code?: string;
+        status?: number;
+      };
+
+      throw new Error(parsed.message || parsed.code || `Notion 请求失败（${response.status}）。`);
+    } catch {
+      throw new Error(errorText || `Notion 请求失败（${response.status}）。`);
+    }
   }
 
   return (await response.json()) as T;
 }
 
-async function getTitlePropertyName() {
-  const schema = await notionRequest<NotionSchemaResponse>(getSchemaUrl());
-  const entry = Object.entries(schema.properties || {}).find(([, value]) => value.type === "title");
-
-  if (!entry) {
-    throw new Error("Notion 数据源里没有 title 属性。");
+async function resolveNotionDataSourceId(): Promise<string | null> {
+  if (NOTION_DATA_SOURCE_ID) {
+    return NOTION_DATA_SOURCE_ID;
   }
 
-  return entry[0];
+  if (!NOTION_DATABASE_ID) {
+    return null;
+  }
+
+  if (!resolvedNotionDataSourceIdPromise) {
+    resolvedNotionDataSourceIdPromise = (async () => {
+      const database = await notionRequest<NotionDatabaseResponse>(
+        `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}`,
+      );
+
+      const sources = database.data_sources || [];
+
+      if (sources.length === 1) {
+        return sources[0]?.id || null;
+      }
+
+      if (sources.length > 1) {
+        throw new Error(
+          "Notion 数据库里有多个 data source，请配置 NOTION_DATA_SOURCE_ID 指向社区帖子所在的那个。",
+        );
+      }
+
+      return null;
+    })();
+  }
+
+  return resolvedNotionDataSourceIdPromise;
+}
+
+async function getSchema() {
+  const dataSourceId = await resolveNotionDataSourceId();
+
+  if (dataSourceId) {
+    return notionRequest<NotionSchemaResponse>(`https://api.notion.com/v1/data_sources/${dataSourceId}`);
+  }
+
+  if (!NOTION_DATABASE_ID) {
+    throw new Error("服务端还没配置 Notion 社区存储。");
+  }
+
+  return notionRequest<NotionSchemaResponse>(getSchemaUrl());
+}
+
+async function getTitlePropertyName() {
+  if (!resolvedTitlePropertyNamePromise) {
+    resolvedTitlePropertyNamePromise = (async () => {
+      const schema = await getSchema();
+      const entry = Object.entries(schema.properties || {}).find(([, value]) => value.type === "title");
+
+      if (!entry) {
+        throw new Error("Notion 数据源里没有 title 属性。");
+      }
+
+      return entry[0];
+    })();
+  }
+
+  return resolvedTitlePropertyNamePromise;
 }
 
 async function getPageBlocks(pageId: string) {
@@ -229,13 +292,22 @@ function mapBlocksToContent(blocks: NotionBlock[]) {
 
 async function listNotionPosts(): Promise<CommunityPostSummary[]> {
   const titlePropertyName = await getTitlePropertyName();
-  const query = await notionRequest<NotionQueryResponse>(getQueryUrl(), {
+  const dataSourceId = await resolveNotionDataSourceId();
+
+  if (!dataSourceId) {
+    throw new Error("缺少可用的 Notion data source。");
+  }
+
+  const query = await notionRequest<NotionQueryResponse>(
+    `https://api.notion.com/v1/data_sources/${dataSourceId}/query`,
+    {
     method: "POST",
     body: JSON.stringify({
       page_size: 10,
       sorts: [{ timestamp: "created_time", direction: "descending" }],
     }),
-  });
+    },
+  );
 
   const pages = query.results || [];
 
@@ -328,10 +400,19 @@ export async function createCommunityPost(input: { title: string; content: strin
   }
 
   const titlePropertyName = await getTitlePropertyName();
+  const dataSourceId = await resolveNotionDataSourceId();
+
+  if (!dataSourceId) {
+    throw new Error("缺少可用的 Notion data source。");
+  }
+
   const response = await notionRequest<{ id: string }>("https://api.notion.com/v1/pages", {
     method: "POST",
     body: JSON.stringify({
-      parent: getParentPayload(),
+      parent: {
+        type: "data_source_id",
+        data_source_id: dataSourceId,
+      },
       properties: {
         [titlePropertyName]: {
           title: [

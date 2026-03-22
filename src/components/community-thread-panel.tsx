@@ -6,35 +6,35 @@ import type { CommunityThread } from "@/lib/notion-community";
 export function CommunityThreadPanel({ thread }: { thread: CommunityThread }) {
   return (
     <section className="community-detail-shell community-panel-enter flex min-h-0 flex-col">
-      <div className="border-b border-border/90 px-5 py-5 sm:px-7">
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-            <span className="rounded-full border border-border bg-background px-3 py-1.5">
-              匿名社区
-            </span>
-            <span>{thread.createdAtLabel}</span>
-            <span>{thread.replies.length} 条回复</span>
+      <div className="community-detail-scroll min-h-0 flex-1 overflow-y-auto">
+        <div className="px-5 py-5 sm:px-7">
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
+              <span className="rounded-full border border-border bg-background px-3 py-1.5">
+                匿名社区
+              </span>
+              <span>{thread.createdAtLabel}</span>
+              <span>{thread.replies.length} 条回复</span>
+            </div>
+
+            <Link
+              href="/message-box"
+              className="inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition-colors duration-200 hover:border-accent/35 hover:text-accent"
+            >
+              关闭
+            </Link>
           </div>
 
-          <Link
-            href="/message-box"
-            className="inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition-colors duration-200 hover:border-accent/35 hover:text-accent"
-          >
-            关闭
-          </Link>
+          <h1 className="mt-5 max-w-4xl font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl">
+            {thread.title}
+          </h1>
+
+          <p className="mt-6 max-w-3xl text-[16px] leading-8 text-muted sm:text-[18px]">
+            {thread.content}
+          </p>
         </div>
 
-        <h1 className="mt-5 max-w-4xl font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl">
-          {thread.title}
-        </h1>
-
-        <p className="mt-6 max-w-3xl text-[16px] leading-8 text-muted sm:text-[18px]">
-          {thread.content}
-        </p>
-      </div>
-
-      <div className="relative min-h-0 flex-1">
-        <div className="community-detail-scroll min-h-0 h-full overflow-y-auto px-5 py-5 sm:px-7">
+        <div className="border-t border-border/90 px-5 py-5 sm:px-7">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-xs tracking-[0.22em] text-muted uppercase">Replies</p>
@@ -65,10 +65,10 @@ export function CommunityThreadPanel({ thread }: { thread: CommunityThread }) {
             )}
           </div>
         </div>
+      </div>
 
-        <div className="community-detail-composer border-t border-border/90 bg-background/94 px-5 py-4 backdrop-blur-sm sm:px-7">
-          <CommunityReplyForm postId={thread.id} />
-        </div>
+      <div className="community-detail-composer border-t border-border/90 bg-background/94 px-5 py-4 backdrop-blur-sm sm:px-7">
+        <CommunityReplyForm postId={thread.id} />
       </div>
     </section>
   );
